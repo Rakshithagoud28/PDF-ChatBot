@@ -3,7 +3,7 @@
 Project Overview<br>
 Intelligent Document-based Chatbot is a powerful AI-driven chatbot that leverages cutting-edge technologies to provide accurate answers based on the contents of PDF files. Users can upload their documents, ask any question, and the chatbot will extract relevant information in real-time, delivering context-aware responses.
 
-The system integrates:
+The system integrates:<br>
 
 1)FAISS for high-performance vector similarity search, enabling rapid retrieval of relevant content.<br>
 2)Groq for efficient large language model processing, ensuring fast and accurate question answering.<br>
