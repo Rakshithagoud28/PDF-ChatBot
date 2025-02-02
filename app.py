@@ -1,8 +1,9 @@
+import openai
 import streamlit as st
 from PyPDF2 import PdfReader
 from sentence_transformers import SentenceTransformer
 import faiss
-import openai
+
 
 # Function to extract text from PDF
 def extract_text_from_pdf(uploaded_file):

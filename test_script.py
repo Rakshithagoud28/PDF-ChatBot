@@ -1,37 +1,24 @@
 from backend import process_pdf_and_respond
 
-# File path to the PDF
-pdf_path = r"C:\Users\Rakshitha Goud\Downloads\raks resume 3.pdf"
+# File path to the PDF (ensure it's accessible)
+pdf_path = r"C:\Users\Rakshitha Goud\Downloads\raks_resume_3.pdf"
 
-# Question you want to ask
-#question = "What is the main topic discussed in this document?","What are the skills of the candidate"
-question = [
+# List of questions to ask
+questions = [
     "What is the main topic discussed in this document?",
-    "What are the skills of the candidate?"
+    "What are the skills of the candidate?",
+    "what is the name of the candidate?"
 ]
 
-# Your OpenAI API key
-# openai_api_key = "__"  # Replace with your actual API key
+# OpenAI API key (remove if using Groq)
 
-# Call the function
-try:
-    answer = process_pdf_and_respond(pdf_path, question, openai_api_key)
-    print("Answer:", answer)
-except Exception as e:
-    print("Error:", e)
-    
-from backend import generate_answer
-from transformers import GPT2Tokenizer, GPT2LMHeadModel
+openai.api_key = os.getenv("OPENAI_API_KEY")
+# openai_api_key = "yosk-proj-EfAIgBj_JLN8kVcGlNLHhDhOXY-79QahP023qy825MuAnYydZ3NhPTfBXdG-1cA4WossmaefrcT3BlbkFJc2ihriRPMnz04c3HwYLqKeJeZbxJ0rI4Zupzo54S94LVinEYPbzBn5pbW5lK9UTCuKZudcwRcA"
 
-# Load the model and tokenizer
-model = GPT2LMHeadModel.from_pretrained('gpt2')
-tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-
-# Your question and relevant chunks (example)
-question = "What is the main topic of the document?"
-relevant_chunks = ["Chunk 1 text here", "Chunk 2 text here"]  # Add relevant chunks here
-
-# Call the generate_answer function
-answer = generate_answer(question, relevant_chunks)
-print(answer)
-
+# Call function for each question
+for question in questions:
+    try:
+        answer = process_pdf_and_respond(pdf_path, question, openai_api_key)
+        print(f"Q: {question}\nA: {answer}\n")
+    except Exception as e:
+        print(f"Error processing question '{question}': {e}")

@@ -1,6 +1,7 @@
+
+import openai
 import faiss
 from sentence_transformers import SentenceTransformer
-import openai
 import pdfplumber
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
