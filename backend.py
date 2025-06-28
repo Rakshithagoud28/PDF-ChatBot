@@ -38,7 +38,11 @@ def generate_answer(question, relevant_chunks):
     
     groq_api_key = os.getenv("GROQ_API_KEY")
     response = requests.post(
+<<<<<<< HEAD
         "https://api.groq.com/openai/v1/chat/completions",
+=======
+        "https://api.groq.com/v1/chat/completions",
+>>>>>>> 3007fd6429043a7c675316354cc939ddc5dd30cb
         headers={"Authorization": f"Bearer {groq_api_key}", "Content-Type": "application/json"},
         json={"model": "llama3-8b", "messages": [{"role": "user", "content": prompt}]}
     )

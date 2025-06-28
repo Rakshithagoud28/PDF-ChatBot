@@ -37,6 +37,7 @@ def generate_answer(question, relevant_chunks):
     context = "\n".join(relevant_chunks)
     prompt = f"Answer the question based on the context below:\n\n{context}\n\nQuestion: {question}"
     
+<<<<<<< HEAD
     groq_api_key = os.getenv("GROQ_API_KEY", "").strip()
 
     response = requests.post(
@@ -47,6 +48,15 @@ def generate_answer(question, relevant_chunks):
 
     print("Groq Response:", response.status_code, response.text)  # ✅ ADD THIS FOR DEBUGGING
 
+=======
+    groq_api_key = os.getenv("GROQ_API_KEY")
+    response = requests.post(
+        "https://api.groq.com/v1/chat/completions",
+        headers={"Authorization": f"Bearer {groq_api_key}", "Content-Type": "application/json"},
+        json={"model": "llama3-8b", "messages": [{"role": "user", "content": prompt}]}
+    )
+    
+>>>>>>> 3007fd6429043a7c675316354cc939ddc5dd30cb
     if response.status_code == 200:
         return response.json()["choices"][0]["message"]["content"].strip()
     else:
