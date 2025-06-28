@@ -75,6 +75,7 @@ if uploaded_file:
     if question:
         with st.spinner("Finding the answer..."):
             relevant_chunks = search_faiss_index(question, model, index, chunks)
+            print(f"chunks: {relevant_chunks}")
             answer = generate_answer(question, relevant_chunks)
 
         st.write("### Answer:")
