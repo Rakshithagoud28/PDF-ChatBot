@@ -1,9 +1,9 @@
-import openai
 import streamlit as st
 from PyPDF2 import PdfReader
 from sentence_transformers import SentenceTransformer
 import faiss
-
+import requests
+import os
 
 # Function to extract text from PDF
 def extract_text_from_pdf(uploaded_file):
@@ -32,16 +32,25 @@ def search_faiss_index(question, model, index, chunks, top_k=5):
     relevant_chunks = [chunks[i] for i in indices[0]]
     return relevant_chunks
 
-# Function to generate answers using OpenAI API
+# Function to generate answers using Groq API
 def generate_answer(question, relevant_chunks):
     context = "\n".join(relevant_chunks)
     prompt = f"Answer the question based on the context below:\n\n{context}\n\nQuestion: {question}"
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=150
+    
+    groq_api_key = os.getenv("GROQ_API_KEY", "").strip()
+
+    response = requests.post(
+        "https://api.groq.com/openai/v1/chat/completions",
+        headers={"Authorization": f"Bearer {groq_api_key}", "Content-Type": "application/json"},
+        json={"model": "llama3-8b", "messages": [{"role": "user", "content": prompt}]}
     )
-    return response.choices[0].text.strip()
+
+    print("Groq Response:", response.status_code, response.text)  # ✅ ADD THIS FOR DEBUGGING
+
+    if response.status_code == 200:
+        return response.json()["choices"][0]["message"]["content"].strip()
+    else:
+        return "Error generating response."
 
 # Streamlit app
 st.title("PDF-Based Chatbot")
@@ -76,8 +85,8 @@ if uploaded_file:
     if question:
         with st.spinner("Finding the answer..."):
             relevant_chunks = search_faiss_index(question, model, index, chunks)
+            print(f"chunks: {relevant_chunks}")
             answer = generate_answer(question, relevant_chunks)
 
         st.write("### Answer:")
         st.write(answer)
-
