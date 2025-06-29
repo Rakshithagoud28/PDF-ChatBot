@@ -2,7 +2,7 @@ import streamlit as st
 from PyPDF2 import PdfReader
 from sentence_transformers import SentenceTransformer
 import faiss
-import openai
+#import openai
 
 # Function to extract text from PDF
 def extract_text_from_pdf(uploaded_file):
@@ -32,15 +32,38 @@ def search_faiss_index(question, model, index, chunks, top_k=5):
     return relevant_chunks
 
 # Function to generate answers using OpenAI API
+# Function to generate answer using Groq API
 def generate_answer(question, relevant_chunks):
+    import os
+    import requests
+
+    # Prepare prompt
     context = "\n".join(relevant_chunks)
     prompt = f"Answer the question based on the context below:\n\n{context}\n\nQuestion: {question}"
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=150
+
+    # Load Groq API key
+    groq_api_key = os.getenv("GROQ_API_KEY")
+    if not groq_api_key:
+        return "Error: GROQ_API_KEY environment variable not set."
+
+    # Make API request to Groq
+    response = requests.post(
+       "https://api.groq.com/openai/v1/chat/completions",
+        headers={
+            "Authorization": f"Bearer {groq_api_key}",
+            "Content-Type": "application/json"
+        },
+        json={
+            "model": "llama3-8b-8192",
+            "messages": [{"role": "user", "content": prompt}]
+        }
     )
-    return response.choices[0].text.strip()
+
+    if response.status_code == 200:
+        return response.json()["choices"][0]["message"]["content"].strip()
+    else:
+        return f"Groq API Error: {response.status_code} - {response.text}"
+
 
 # Streamlit app
 st.title("PDF-Based Chatbot")

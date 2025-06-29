@@ -1,6 +1,6 @@
 import faiss
 from sentence_transformers import SentenceTransformer
-import openai
+#import openai
 import pdfplumber
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
@@ -106,7 +106,7 @@ def process_pdf_and_respond(pdf_path, question, openai_api_key):
     :return: Generated answer.
     """
     # Set the OpenAI API key (not needed for local GPT-2 model)
-    openai.api_key = openai_api_key
+    #openai.api_key = openai_api_key
 
     # Extract text from the PDF
     text = extract_text_from_pdf(pdf_path)
